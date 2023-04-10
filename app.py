@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from newspaper import Article
-from gevent.pywsgi import WSGIServer
+
 
 app = Flask(__name__)
 
@@ -37,5 +37,5 @@ def home():
 
 if __name__ == '__main__':
     # app.run(debug=True)
-    http_server = WSGIServer(('https://abhibhava32-articlefetch-app-i6qquu.streamlit.app/', 8080), app)
-    http_server.serve_forever()
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=8080)
