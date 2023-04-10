@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from newspaper import Article
+from gevent.pywsgi import WSGIServer
 
 app = Flask(__name__)
 
@@ -35,4 +36,6 @@ def home():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
+    http_server = WSGIServer(('127.0.0.1', 5000), app)
+    http_server.serve_forever()
