@@ -1,0 +1,95 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Article Summary Fetcher - Result</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+</head>
+<body>
+
+	<div class="container mt-5">
+		<div class="row">
+			<div class="col-md-8 offset-md-2">
+				<div class="card">
+					<img class="card-img-top" src="{{ image_url }}" alt="Card image cap">
+					<div class="card-body">
+						<h5 class="card-title">{{ article_title }}</h5>
+						<p class="card-text">{{ summary }}</p>
+						<p class="card-text">Source: {{ source }}</p>
+						<p class="card-text">
+							{% for keyword in keywords %}
+								<span class="badge badge-primary">#{{ keyword }}</span>
+							{% endfor %}
+						</p>
+						<button type="button" class="btn btn-primary" id="save-btn">Share</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row justify-content-center mt-5 mb-5">
+			<div class="col-md-8">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Submit Another URL</h5>
+						<form method="post">
+							<div class="form-group">
+								<input type="text" name="url" class="form-control" placeholder="Enter URL" required>
+							</div>
+							<div class="form-group text-center">
+								<button type="submit" class="btn btn-primary mr-2">Submit</button>
+								<button type="reset" class="btn btn-secondary">Clear</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+
+</body>
+<script>
+	document.getElementById('save-btn').addEventListener('click', function() {
+	var node = document.querySelector('.card');
+	domtoimage.toPng(node)
+		.then(function(dataUrl) {
+		var canvas = document.createElement('canvas');
+		var img = new Image();
+		img.onload = function() {
+			var MAX_WIDTH = 1080;
+			var MAX_HEIGHT = 1350;
+			var width = img.width;
+			var height = img.height;
+
+			if (width > height) {
+			if (width > MAX_WIDTH) {
+				height *= MAX_WIDTH / width;
+				width = MAX_WIDTH;
+			}
+			} else {
+			if (height > MAX_HEIGHT) {
+				width *= MAX_HEIGHT / height;
+				height = MAX_HEIGHT;
+			}
+			}
+			canvas.width = width;
+			canvas.height = height;
+			var ctx = canvas.getContext("2d");
+			ctx.drawImage(img, 0, 0, width, height);
+
+			var link = document.createElement('a');
+			link.download = 'article.png';
+			link.href = canvas.toDataURL();
+			link.click();
+		}
+		img.src = dataUrl;
+		});
+	});
+  </script>
+  
+</html>
