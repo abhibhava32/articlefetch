@@ -38,4 +38,4 @@ def home():
 if __name__ == '__main__':
     # app.run(debug=True)
     from waitress import serve
-    serve(app, host="0.0.0.0", port=8080)
+    serve(app, host="https://abhibhava32-articlefetch-app-i6qquu.streamlit.app/", port=8080)
